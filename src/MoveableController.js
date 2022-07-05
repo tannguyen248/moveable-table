@@ -1,5 +1,12 @@
 import Moveable from "moveable";
 
+const convertPxToFloat = (px) => {
+  if (typeof px !== 'string') {
+    return px
+  }
+  return parseFloat(px.replace("px", "" ))
+}
+
 const init = () => {
   const moveable = new Moveable(document.body, {
     // If you want to use a group, set multiple targets(type: Array<HTMLElement | SVGElement>).
@@ -36,8 +43,25 @@ const init = () => {
       console.log("top: ", e.top, "left: ", e.left);
       console.log(e.clientX, e.clientY);
 
+      const rowIndex = e.target.dataset["row"];
       frame.translate = e.beforeTranslate;
       e.target.style.transform = `translate(${e.beforeTranslate[0]}px, ${e.beforeTranslate[1]}px)`;
+      console.log("delta", e.delta)
+      
+      const table = document.getElementById("table")
+      if (table) {
+        const rowBeforeDivs = table.querySelectorAll(`div[data-row="${rowIndex - 1}"]`)
+        const rowDivs = table.querySelectorAll(`div[data-row="${rowIndex}"]`)
+
+        rowBeforeDivs.forEach(div => {
+          div.style.height = `${convertPxToFloat(div.style.height) + e.delta[1]}px`
+        })
+
+        rowDivs.forEach(div => {
+          div.style.height = `${convertPxToFloat(div.style.height) - e.delta[1]}px`
+        })
+      }
+
     })
     .on("clip", (e) => {
       if (e.clipType === "rect") {
