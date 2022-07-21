@@ -40,6 +40,7 @@ function App() {
       >
         bound
       </div>
+      <div id="subDraggableItem" style={{ width: 20, height: 20, position: "absolute" }}>Drag</div>
     </div>
   );
 }
